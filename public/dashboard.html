@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sehrab X Boost - Premium SMM Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060a15;
+      --primary: #6366f1;
+      --secondary: #d946ef;
+      --card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --ig: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+      --font: 'Outfit', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        radial-gradient(ellipse at 20% 20%, rgba(99,102,241,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(217,70,239,0.06) 0%, transparent 60%),
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+    body > * { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 5%; border-bottom: 1px solid var(--border);
+      background: rgba(6,10,21,0.9); backdrop-filter: blur(16px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 8px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.03em; }
+    .nav-logo { width: 34px; height: 34px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 0 16px rgba(99,102,241,0.4); }
+    .blue-tick { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; background: #1d9bf0; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 8px rgba(29,155,240,0.5); }
+    .blue-tick svg { width: 10px; height: 10px; fill: white; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .balance-pill { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); padding: 7px 14px; border-radius: 50px; font-weight: 700; font-size: 0.88rem; color: #a5b4fc; white-space: nowrap; }
+    .btn-logout { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--text); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
+    .btn-logout:hover { background: rgba(255,255,255,0.12); }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 1300px; margin: 0 auto; padding: 24px 20px; flex: 1; }
+
+    /* ── STATS ── */
+    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(10px); transition: all 0.3s; }
+    .stat-card:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-2px); }
+    .stat-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .stat-icon.purple { background: linear-gradient(135deg,#8b5cf6,#6d28d9); }
+    .stat-icon.green  { background: linear-gradient(135deg,#10b981,#047857); }
+    .stat-icon.blue   { background: linear-gradient(135deg,#3b82f6,#1d4ed8); }
+    .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 3px; }
+    .stat-value { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+
+    /* ── PLATFORM CARDS ── */
+    .section-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 12px; }
+    .platform-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+    .platform-card { border-radius: 14px; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); background: var(--card); backdrop-filter: blur(10px); position: relative; overflow: hidden; }
+    .platform-card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; }
+    .platform-card.ig::before { background: linear-gradient(135deg,rgba(240,148,51,0.08),rgba(188,24,136,0.08)); }
+    .platform-card.yt::before { background: rgba(255,0,0,0.06); }
+    .platform-card.fb::before { background: rgba(24,119,242,0.08); }
+    .platform-card:hover::before, .platform-card.active::before { opacity: 1; }
+    .platform-card.ig:hover,.platform-card.ig.active { border-color: rgba(220,39,67,0.5); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(220,39,67,0.12); }
+    .platform-card.yt:hover,.platform-card.yt.active { border-color: rgba(255,0,0,0.5); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(255,0,0,0.12); }
+    .platform-card.fb:hover,.platform-card.fb.active { border-color: rgba(24,119,242,0.5); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(24,119,242,0.12); }
+    .platform-logo { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .platform-logo.ig { background: var(--ig); }
+    .platform-logo.yt { background: #ff0000; }
+    .platform-logo.fb { background: #1877f2; }
+    .platform-logo svg { width: 26px; height: 26px; fill: white; }
+    .platform-name { font-size: 0.9rem; font-weight: 700; }
+    .platform-count { font-size: 0.72rem; color: var(--muted); background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 50px; }
+
+    /* ── MAIN GRID ── */
+    .main-grid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 20px; }
+
+    /* ── CARD ── */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; backdrop-filter: blur(12px); margin-bottom: 20px; }
+    .card-header { padding: 18px 20px 14px; border-bottom: 1px solid var(--border); font-size: 0.95rem; font-weight: 700; }
+    .card-body { padding: 20px; }
+
+    /* ── SERVICE LIST ── */
+    .services-list { display: flex; flex-direction: column; gap: 8px; }
+    .service-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 9px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; }
+    .service-item:hover,.service-item.selected { border-color: rgba(99,102,241,0.4); background: rgba(99,102,241,0.06); }
+    .service-item.selected { border-color: var(--primary); }
+    .service-name-col { flex: 1; }
+    .service-name-col h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 2px; }
+    .service-name-col p { font-size: 0.73rem; color: var(--muted); }
+    .service-price-col { text-align: right; margin-left: 10px; }
+    .service-rate-tag { font-size: 0.82rem; font-weight: 700; color: #4ade80; }
+    .service-minmax { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── ORDER FORM ── */
+    .order-form-section { margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 7px; }
+    .form-input { width: 100%; padding: 11px 14px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 9px; color: var(--text); font-family: var(--font); font-size: 0.92rem; transition: all 0.3s; margin-bottom: 14px; }
+    .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+    .form-input::placeholder { color: rgba(255,255,255,0.22); }
+    .price-box { background: linear-gradient(135deg,rgba(99,102,241,0.08),rgba(217,70,239,0.05)); border: 1px solid rgba(99,102,241,0.2); border-radius: 9px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .price-label { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+    .price-amount { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em; }
+    .selected-service-info { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.2); border-radius: 9px; padding: 12px 14px; margin-bottom: 14px; display: none; }
+    .selected-service-info h4 { font-size: 0.88rem; margin-bottom: 6px; }
+    .info-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .info-chip { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 3px 9px; font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+    .info-chip span { color: #a5b4fc; }
+
+    /* ── BUTTONS ── */
+    .btn { display: flex; align-items: center; justify-content: center; gap: 7px; padding: 12px 20px; border: none; border-radius: 9px; cursor: pointer; font-family: var(--font); font-weight: 700; font-size: 0.92rem; transition: all 0.3s; width: 100%; }
+    .btn-primary { background: linear-gradient(135deg,var(--primary),#4f46e5); color: white; box-shadow: 0 4px 16px rgba(99,102,241,0.35); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(99,102,241,0.45); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .btn-accent { background: linear-gradient(135deg,var(--secondary),#c084fc); color: white; box-shadow: 0 4px 16px rgba(217,70,239,0.3); }
+    .btn-accent:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(217,70,239,0.4); }
+
+    /* ── AMOUNT BTNS ── */
+    .amount-btns { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+    .amt-btn { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: var(--text); padding: 10px; border-radius: 8px; cursor: pointer; font-family: var(--font); font-weight: 700; font-size: 0.9rem; transition: all 0.3s; }
+    .amt-btn:hover,.amt-btn.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 4px 12px rgba(99,102,241,0.4); }
+
+    /* ── PAYMENT SECTION ── */
+    .pay-timer-box {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.88rem;
+    }
+    #pay-timer { font-size: 1.3rem; font-weight: 900; color: #4ade80; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+    .or-divider { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 0.78rem; font-weight: 600; margin: 14px 0; text-transform: uppercase; letter-spacing: 0.06em; }
+    .or-divider::before,.or-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+    .qr-wrapper { display: flex; flex-direction: column; align-items: center; gap: 8px; background: rgba(0,0,0,0.2); border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; margin-bottom: 6px; }
+    .qr-img { width: 150px; height: 150px; background: white; padding: 8px; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.5); display: block; }
+    .qr-caption { font-size: 0.75rem; color: var(--muted); text-align: center; }
+
+    /* ── PAY APP BUTTONS ── */
+    .pay-apps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 6px; }
+    .pay-app-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 12px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04); cursor: pointer; text-decoration: none;
+      color: var(--text); font-weight: 700; font-size: 0.76rem; transition: all 0.3s; font-family: var(--font);
+    }
+    .pay-app-btn:hover { transform: translateY(-3px); }
+    .pay-app-btn.gpay:hover { border-color: rgba(66,133,244,0.5); box-shadow: 0 8px 20px rgba(66,133,244,0.2); background: rgba(66,133,244,0.06); }
+    .pay-app-btn.phonepe:hover { border-color: rgba(95,37,159,0.6); box-shadow: 0 8px 20px rgba(95,37,159,0.25); background: rgba(95,37,159,0.08); }
+    .pay-app-btn.paytm:hover { border-color: rgba(0,186,242,0.5); box-shadow: 0 8px 20px rgba(0,186,242,0.2); background: rgba(0,186,242,0.06); }
+    .pay-app-logo { width: 46px; height: 46px; border-radius: 10px; overflow: hidden; display: block; object-fit: contain; background: white; padding: 4px; border: 1px solid rgba(255,255,255,0.08); }
+
+    /* ── ALERTS ── */
+    .alert { padding: 11px 14px; border-radius: 9px; margin-bottom: 14px; font-size: 0.88rem; display: none; }
+    .alert-success { display: block; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #4ade80; }
+    .alert-danger  { display: block; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #f87171; }
+
+    /* ── TABS ── */
+    .tab-nav { display: flex; gap: 4px; background: rgba(0,0,0,0.25); padding: 4px; border-radius: 9px; margin-bottom: 16px; }
+    .tab-pill { flex: 1; padding: 8px; text-align: center; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.84rem; color: var(--muted); transition: all 0.3s; }
+    .tab-pill.active { background: rgba(99,102,241,0.2); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.25); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 480px; }
+    th { padding: 10px 12px; color: var(--muted); text-transform: uppercase; font-size: 0.68rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.06); text-align: left; }
+    td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+    tr:hover td { background: rgba(255,255,255,0.015); }
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+    .badge-pending  { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+    .badge-completed{ background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+    .badge-approved { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+    .badge-rejected { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+    .plat-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 5px; font-weight: 700; font-size: 0.75rem; color: white; }
+    .plat-badge.ig { background: var(--ig); }
+    .plat-badge.yt { background: #ff0000; }
+    .plat-badge.fb { background: #1877f2; }
+    .plat-badge svg { width: 11px; height: 11px; fill: white; flex-shrink: 0; }
+    .empty { text-align: center; padding: 36px; color: var(--muted); font-size: 0.9rem; }
+
+    /* ── FOOTER ── */
+    footer { text-align: center; padding: 20px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.82rem; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .fadeUp { animation: fadeUp 0.4s ease-out; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+    .timer-critical { animation: pulse 1s infinite; }
+
+    /* ══════════════════════════════════════════
+       MOBILE RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .container { padding: 14px 12px; }
+      nav { padding: 12px 14px; }
+      .nav-brand { font-size: 1.05rem; gap: 6px; }
+      .nav-logo { width: 28px; height: 28px; font-size: 0.85rem; }
+      .blue-tick { width: 15px; height: 15px; }
+      .blue-tick svg { width: 8px; height: 8px; }
+      .balance-pill { padding: 6px 10px; font-size: 0.8rem; }
+      .btn-logout { padding: 6px 10px; font-size: 0.8rem; }
+
+      .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-card { padding: 12px 14px; gap: 10px; }
+      .stat-icon { width: 36px; height: 36px; font-size: 1rem; }
+      .stat-value { font-size: 1.1rem; }
+      .stat-label { font-size: 0.67rem; }
+
+      .platform-cards { gap: 8px; }
+      .platform-card { padding: 12px 6px; gap: 6px; border-radius: 10px; }
+      .platform-logo { width: 40px; height: 40px; border-radius: 10px; }
+      .platform-logo svg { width: 20px; height: 20px; }
+      .platform-name { font-size: 0.78rem; }
+      .platform-count { font-size: 0.66rem; padding: 2px 6px; }
+
+      .card-header { padding: 14px 16px 12px; font-size: 0.88rem; }
+      .card-body { padding: 14px 16px; }
+      .service-item { padding: 10px 12px; }
+      .service-name-col h4 { font-size: 0.82rem; }
+      .service-name-col p { font-size: 0.7rem; }
+
+      .qr-img { width: 130px; height: 130px; }
+      .pay-apps-grid { gap: 8px; }
+      .pay-app-btn { padding: 10px 4px; font-size: 0.72rem; }
+      .pay-app-logo { width: 38px; height: 38px; padding: 3px; }
+      #pay-timer { font-size: 1.15rem; }
+    }
+    @media (max-width: 380px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .nav-brand { font-size: 0.9rem; }
+      .nav-logo { width: 24px; height: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand">
+      <div class="nav-logo">🚀</div>
+      Sehrab X Boost
+      <div class="blue-tick" title="Verified">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="balance-pill">💰 ₹<span id="nav-balance">0.00</span></div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon purple">📱</div>
+        <div><div class="stat-label">Mobile</div><div class="stat-value" id="stat-mobile" style="font-size:0.95rem;">—</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">₹</div>
+        <div><div class="stat-label">Balance</div><div class="stat-value" style="color:#4ade80;">₹<span id="stat-balance">0.00</span></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">🛒</div>
+        <div><div class="stat-label">Total Spent</div><div class="stat-value">₹<span id="stat-spent">0.00</span></div></div>
+      </div>
+    </div>
+
+    <!-- PLATFORM CARDS -->
+    <div class="section-label">Select Platform</div>
+    <div class="platform-cards">
+      <div class="platform-card ig" id="card-ig" onclick="selectPlatform('Instagram')">
+        <div class="platform-logo ig">
+          <svg viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/></svg>
+        </div>
+        <div class="platform-name">Instagram</div>
+        <div class="platform-count" id="ig-count">—</div>
+      </div>
+      <div class="platform-card yt" id="card-yt" onclick="selectPlatform('YouTube')">
+        <div class="platform-logo yt">
+          <svg viewBox="0 0 16 16"><path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.104 2.581l-.008.104-.022.26-.01.104c-.048.52-.119 1.023-.22 1.402a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.52.12-.1.224-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99 99 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/></svg>
+        </div>
+        <div class="platform-name">YouTube</div>
+        <div class="platform-count" id="yt-count">—</div>
+      </div>
+      <div class="platform-card fb" id="card-fb" onclick="selectPlatform('Facebook')">
+        <div class="platform-logo fb">
+          <svg viewBox="0 0 16 16"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/></svg>
+        </div>
+        <div class="platform-name">Facebook</div>
+        <div class="platform-count" id="fb-count">—</div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+
+      <!-- LEFT: Order + History -->
+      <div>
+        <div class="card fadeUp">
+          <div class="card-header" id="order-panel-title">🛒 Place New Order</div>
+          <div class="card-body">
+            <div id="no-platform-msg" style="text-align:center;padding:28px;color:var(--muted);">
+              <div style="font-size:2rem;margin-bottom:10px;">☝️</div>
+              <p style="font-weight:600;">Select a platform above to see services</p>
+            </div>
+            <div id="services-list-section" style="display:none;">
+              <div class="services-list" id="services-list"></div>
+              <div class="order-form-section" id="order-form-section" style="display:none;">
+                <div class="selected-service-info" id="selected-service-info">
+                  <h4 id="sel-service-name"></h4>
+                  <div class="info-chips">
+                    <div class="info-chip">Rate: <span id="sel-rate"></span></div>
+                    <div class="info-chip">Min: <span id="sel-min"></span></div>
+                    <div class="info-chip">Max: <span id="sel-max"></span></div>
+                  </div>
+                </div>
+                <div id="order-alert" class="alert"></div>
+                <label class="form-label">Target Link / URL</label>
+                <input type="url" id="order-link" class="form-input" placeholder="https://..." required>
+                <label class="form-label">Quantity</label>
+                <input type="number" id="order-qty" class="form-input" placeholder="Enter quantity..." min="1" oninput="calcPrice()">
+                <div class="price-box">
+                  <span class="price-label">Total Estimated Price</span>
+                  <span class="price-amount">₹<span id="price-display">0.00</span></span>
+                </div>
+                <button class="btn btn-primary" id="order-btn" onclick="submitOrder()">🚀 Submit Order</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card fadeUp">
+          <div class="card-header">📋 Order & Transaction History</div>
+          <div class="card-body">
+            <div class="tab-nav">
+              <div class="tab-pill active" onclick="switchTab('orders')">Orders</div>
+              <div class="tab-pill" onclick="switchTab('deposits')">Deposits</div>
+            </div>
+            <div class="tab-pane active" id="tab-orders">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>ID</th><th>Platform</th><th>Service</th><th>Qty</th><th>Price</th><th>Status</th></tr></thead>
+                  <tbody id="orders-tbody"><tr><td colspan="6" class="empty">No orders yet</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-deposits">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>ID</th><th>UTR</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+                  <tbody id="deposits-tbody"><tr><td colspan="5" class="empty">No deposits yet</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Add Funds -->
+      <div>
+        <div class="card fadeUp">
+          <div class="card-header">💳 Add Funds via UPI</div>
+          <div class="card-body">
+            <div id="payment-alert" class="alert"></div>
+
+            <label class="form-label">Step 1 — Select Amount</label>
+            <div class="amount-btns">
+              <button class="amt-btn" onclick="setAmt(10)">₹10</button>
+              <button class="amt-btn" onclick="setAmt(100)">₹100</button>
+              <button class="amt-btn" onclick="setAmt(1000)">₹1000</button>
+            </div>
+            <input type="number" id="fund-amount" class="form-input" placeholder="Or enter custom amount..." min="1" oninput="updatePayLinks(); clearAmtBtns();">
+
+            <!-- Payment area (shown after amount entered) -->
+            <div id="pay-apps-area" style="display:none;">
+
+              <!-- 5-Min Countdown Timer -->
+              <div class="pay-timer-box">
+                <span style="color:var(--muted);font-size:0.82rem;">⏱️ Pay within</span>
+                <span id="pay-timer">05:00</span>
+                <span style="color:var(--muted);font-size:0.82rem;">to confirm</span>
+              </div>
+
+              <!-- QR Code -->
+              <label class="form-label">Step 2 — Scan QR Code</label>
+              <div class="qr-wrapper">
+                <img id="qr-img" class="qr-img" src="" alt="UPI QR Code">
+                <div class="qr-caption">Scan with GPay / PhonePe / Paytm / Any UPI app</div>
+              </div>
+
+              <div class="or-divider">Or open app directly</div>
+
+              <!-- App Buttons with REAL Logos -->
+              <label class="form-label">Step 2 — Open Payment App</label>
+              <div class="pay-apps-grid">
+
+                <!-- Google Pay -->
+                <a id="link-gpay" href="#" class="pay-app-btn gpay" target="_blank" title="Pay with Google Pay">
+                  <img class="pay-app-logo" src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Google_Pay_Logo_%282020-present%29.svg" alt="Google Pay">
+                  GPay
+                </a>
+
+                <!-- PhonePe -->
+                <a id="link-phonepe" href="#" class="pay-app-btn phonepe" target="_blank" title="Pay with PhonePe">
+                  <img class="pay-app-logo" src="https://upload.wikimedia.org/wikipedia/commons/e/e1/PhonePe_Logo.svg" alt="PhonePe">
+                  PhonePe
+                </a>
+
+                <!-- Paytm -->
+                <a id="link-paytm" href="#" class="pay-app-btn paytm" target="_blank" title="Pay with Paytm">
+                  <img class="pay-app-logo" src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo.svg" alt="Paytm">
+                  Paytm
+                </a>
+
+              </div>
+              <p style="font-size:0.74rem;color:var(--muted);text-align:center;margin-top:6px;">Tap → Pay → Come back → Enter UTR below</p>
+            </div>
+
+            <!-- UTR Input (Step 3) -->
+            <div id="utr-section" style="display:none; margin-top:14px;">
+              <label class="form-label">Step 3 — Enter 12-Digit UTR</label>
+              <input type="text" id="utr-input" class="form-input" placeholder="e.g. 123456789012" maxlength="12" pattern="\d{12}">
+              <p style="font-size:0.73rem;color:var(--muted);margin-top:-10px;margin-bottom:14px;">Enter the Transaction Ref / UTR from your payment app receipt.</p>
+              <button class="btn btn-accent" onclick="submitUTR()">✅ Submit UTR for Verification</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 <strong>Sehrab X Boost</strong> · Premium SMM Panel · All rights reserved</p>
+  </footer>
+
+<script>
+  const token = localStorage.getItem('smm_user_token');
+  if (!token) window.location.href = 'index.html';
+
+  let allServices = [];
+  let selectedPlatform = null;
+  let selectedService = null;
+  let payTimerInterval = null;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadProfile(); loadServices(); loadOrders(); loadDeposits();
+  });
+
+  function logout() {
+    localStorage.removeItem('smm_user_token');
+    localStorage.removeItem('smm_user_mobile');
+    window.location.href = 'index.html';
+  }
+
+  async function loadProfile() {
+    const res = await fetch('/api/user/profile', { headers: { Authorization: `Bearer ${token}` } });
+    if (res.status === 401) return logout();
+    const d = await res.json();
+    if (res.ok) {
+      document.getElementById('nav-balance').textContent = d.balance.toFixed(2);
+      document.getElementById('stat-balance').textContent = d.balance.toFixed(2);
+      document.getElementById('stat-spent').textContent = d.totalSpent.toFixed(2);
+      document.getElementById('stat-mobile').textContent = d.mobile;
+    }
+  }
+
+  async function loadServices() {
+    const res = await fetch('/api/services');
+    const data = await res.json();
+    allServices = data;
+    ['Instagram','YouTube','Facebook'].forEach(p => {
+      const n = data.filter(s => s.category === p).length;
+      const k = p === 'Instagram' ? 'ig' : p === 'YouTube' ? 'yt' : 'fb';
+      document.getElementById(`${k}-count`).textContent = `${n} services`;
+    });
+  }
+
+  function selectPlatform(platform) {
+    selectedPlatform = platform; selectedService = null;
+    ['ig','yt','fb'].forEach(k => document.getElementById(`card-${k}`).classList.remove('active'));
+    const key = platform === 'Instagram' ? 'ig' : platform === 'YouTube' ? 'yt' : 'fb';
+    document.getElementById(`card-${key}`).classList.add('active');
+    const icons = { Instagram: '📸', YouTube: '▶️', Facebook: '👤' };
+    document.getElementById('order-panel-title').textContent = `${icons[platform]} ${platform} Services`;
+    document.getElementById('no-platform-msg').style.display = 'none';
+    document.getElementById('services-list-section').style.display = 'block';
+    document.getElementById('order-form-section').style.display = 'none';
+    const filtered = allServices.filter(s => s.category === platform);
+    const list = document.getElementById('services-list');
+    list.innerHTML = '';
+    filtered.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'service-item'; el.id = `srv-${s.id}`; el.onclick = () => pickService(s);
+      el.innerHTML = `
+        <div class="service-name-col"><h4>${s.name}</h4><p>${s.description}</p></div>
+        <div class="service-price-col"><div class="service-rate-tag">₹${s.rate}/1k</div><div class="service-minmax">${s.min}–${s.max}</div></div>`;
+      list.appendChild(el);
+    });
+  }
+
+  function pickService(s) {
+    selectedService = s;
+    document.querySelectorAll('.service-item').forEach(el => el.classList.remove('selected'));
+    document.getElementById(`srv-${s.id}`).classList.add('selected');
+    document.getElementById('order-form-section').style.display = 'block';
+    document.getElementById('selected-service-info').style.display = 'block';
+    document.getElementById('sel-service-name').textContent = s.name;
+    document.getElementById('sel-rate').textContent = `₹${s.rate}/1000`;
+    document.getElementById('sel-min').textContent = s.min;
+    document.getElementById('sel-max').textContent = s.max;
+    const placeholders = { Instagram:'https://instagram.com/p/...', YouTube:'https://youtube.com/watch?v=...', Facebook:'https://facebook.com/...' };
+    document.getElementById('order-link').placeholder = placeholders[selectedPlatform] || 'https://...';
+    document.getElementById('order-qty').value = '';
+    document.getElementById('price-display').textContent = '0.00';
+    hideAlert('order-alert');
+    document.getElementById('order-form-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function calcPrice() {
+    if (!selectedService) return;
+    const qty = parseInt(document.getElementById('order-qty').value);
+    document.getElementById('price-display').textContent =
+      (!isNaN(qty) && qty > 0) ? ((selectedService.rate * qty) / 1000).toFixed(2) : '0.00';
+  }
+
+  async function submitOrder() {
+    if (!selectedService) return;
+    const link = document.getElementById('order-link').value.trim();
+    const quantity = document.getElementById('order-qty').value;
+    hideAlert('order-alert');
+    if (!link) return showAlert('order-alert', 'Please enter a target URL.', 'danger');
+    if (!quantity || parseInt(quantity) < 1) return showAlert('order-alert', 'Please enter a valid quantity.', 'danger');
+    const btn = document.getElementById('order-btn');
+    btn.disabled = true; btn.textContent = 'Submitting...';
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ serviceId: selectedService.id, link, quantity })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      showAlert('order-alert', '✅ ' + data.message, 'success');
+      document.getElementById('order-link').value = '';
+      document.getElementById('order-qty').value = '';
+      document.getElementById('price-display').textContent = '0.00';
+      loadProfile(); loadOrders();
+    } catch (e) { showAlert('order-alert', '❌ ' + e.message, 'danger'); }
+    finally { btn.disabled = false; btn.textContent = '🚀 Submit Order'; }
+  }
+
+  // ── FUNDS & PAYMENT ──
+  function setAmt(v) {
+    document.getElementById('fund-amount').value = v;
+    document.querySelectorAll('.amt-btn').forEach(b => b.classList.toggle('active', b.textContent === `₹${v}`));
+    updatePayLinks();
+  }
+
+  function clearAmtBtns() {
+    document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('active'));
+  }
+
+  function updatePayLinks() {
+    const amt = parseFloat(document.getElementById('fund-amount').value);
+    const appsArea   = document.getElementById('pay-apps-area');
+    const utrSection = document.getElementById('utr-section');
+
+    if (isNaN(amt) || amt <= 0) {
+      appsArea.style.display = 'none';
+      utrSection.style.display = 'none';
+      stopTimer();
+      return;
+    }
+
+    const amtStr    = amt.toFixed(2);
+    const upiID     = 'sehrab88@fam';
+    const payeeName = encodeURIComponent('Sehrab X Boost');
+    const note      = encodeURIComponent('SMM Panel Recharge');
+
+    // Generate QR
+    const upiUrl = `upi://pay?pa=${upiID}&pn=${payeeName}&am=${amtStr}&cu=INR&tn=${note}`;
+    document.getElementById('qr-img').src =
+      `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}&bgcolor=ffffff&color=000000&margin=10`;
+
+    // Deep links for apps
+    document.getElementById('link-gpay').href    = `tez://upi/pay?pa=${upiID}&pn=${payeeName}&am=${amtStr}&cu=INR&tn=${note}`;
+    document.getElementById('link-phonepe').href = `phonepe://pay?pa=${upiID}&pn=${payeeName}&am=${amtStr}&cu=INR`;
+    document.getElementById('link-paytm').href   = `paytmmp://upi/pay?pa=${upiID}&pn=${payeeName}&am=${amtStr}&cu=INR`;
+
+    const firstShow = appsArea.style.display === 'none';
+    appsArea.style.display   = 'block';
+    utrSection.style.display = 'block';
+
+    // Start timer only when newly shown
+    if (firstShow) startTimer();
+  }
+
+  // ── 5-MINUTE COUNTDOWN TIMER ──
+  function startTimer() {
+    stopTimer();
+    let totalSec = 5 * 60;
+    const timerEl = document.getElementById('pay-timer');
+
+    function tick() {
+      const m = Math.floor(totalSec / 60);
+      const s = totalSec % 60;
+      timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if (totalSec <= 30) { timerEl.style.color = '#f87171'; timerEl.classList.add('timer-critical'); }
+      else if (totalSec <= 90) { timerEl.style.color = '#fbbf24'; timerEl.classList.remove('timer-critical'); }
+      else { timerEl.style.color = '#4ade80'; timerEl.classList.remove('timer-critical'); }
+
+      if (totalSec <= 0) {
+        stopTimer();
+        showAlert('payment-alert', '⏰ Timer expired! Please re-select your amount and try again.', 'danger');
+        document.getElementById('pay-apps-area').style.display = 'none';
+        document.getElementById('utr-section').style.display = 'none';
+        document.getElementById('fund-amount').value = '';
+        clearAmtBtns();
+        return;
+      }
+      totalSec--;
+    }
+    tick();
+    payTimerInterval = setInterval(tick, 1000);
+  }
+
+  function stopTimer() {
+    if (payTimerInterval) { clearInterval(payTimerInterval); payTimerInterval = null; }
+    const timerEl = document.getElementById('pay-timer');
+    if (timerEl) { timerEl.textContent = '05:00'; timerEl.style.color = '#4ade80'; timerEl.classList.remove('timer-critical'); }
+  }
+
+  async function submitUTR() {
+    const amount = document.getElementById('fund-amount').value;
+    const utr    = document.getElementById('utr-input').value.trim();
+    hideAlert('payment-alert');
+    if (!amount || parseFloat(amount) <= 0) return showAlert('payment-alert', 'Please select or enter an amount.', 'danger');
+    if (!/^\d{12}$/.test(utr)) return showAlert('payment-alert', 'Please enter a valid 12-digit UTR number.', 'danger');
+    try {
+      const res = await fetch('/api/payment/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ amount, utr })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      showAlert('payment-alert', '✅ ' + data.message, 'success');
+      document.getElementById('fund-amount').value = '';
+      document.getElementById('utr-input').value = '';
+      document.getElementById('pay-apps-area').style.display = 'none';
+      document.getElementById('utr-section').style.display = 'none';
+      clearAmtBtns(); stopTimer(); loadDeposits();
+    } catch (e) { showAlert('payment-alert', '❌ ' + e.message, 'danger'); }
+  }
+
+  // ── HISTORY TABS ──
+  function switchTab(t) {
+    document.querySelectorAll('.tab-pill').forEach((el,i) => el.classList.toggle('active', (t==='orders'&&i===0)||(t==='deposits'&&i===1)));
+    document.getElementById('tab-orders').classList.toggle('active', t==='orders');
+    document.getElementById('tab-deposits').classList.toggle('active', t==='deposits');
+  }
+
+  const IG_SVG = `<svg viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/></svg>`;
+  const YT_SVG = `<svg viewBox="0 0 16 16"><path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.104 2.581l-.008.104-.022.26-.01.104c-.048.52-.119 1.023-.22 1.402a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.52.12-.1.224-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99 99 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/></svg>`;
+  const FB_SVG = `<svg viewBox="0 0 16 16"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/></svg>`;
+
+  async function loadOrders() {
+    const res = await fetch('/api/orders', { headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    const tbody = document.getElementById('orders-tbody');
+    if (!data.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty">No orders placed yet</td></tr>'; return; }
+    tbody.innerHTML = data.map(o => {
+      const cls  = o.category==='Instagram'?'ig':o.category==='YouTube'?'yt':'fb';
+      const icon = o.category==='Instagram'?IG_SVG:o.category==='YouTube'?YT_SVG:FB_SVG;
+      return `<tr>
+        <td style="font-weight:700;color:#a5b4fc;font-size:0.78rem;">${o.id}</td>
+        <td><span class="plat-badge ${cls}">${icon}${o.category}</span></td>
+        <td style="font-size:0.8rem;max-width:160px;">${o.serviceName}</td>
+        <td>${o.quantity}</td>
+        <td style="font-weight:700;color:#4ade80;">₹${o.price.toFixed(2)}</td>
+        <td><span class="badge badge-${o.status.toLowerCase()}">${o.status}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function loadDeposits() {
+    const res = await fetch('/api/payments', { headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    const tbody = document.getElementById('deposits-tbody');
+    if (!data.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">No deposit requests yet</td></tr>'; return; }
+    tbody.innerHTML = data.map(t => `
+      <tr>
+        <td style="font-weight:700;color:#a5b4fc;font-size:0.78rem;">${t.id}</td>
+        <td style="font-family:monospace;font-size:0.82rem;">${t.utr}</td>
+        <td style="font-weight:700;">₹${t.amount.toFixed(2)}</td>
+        <td><span class="badge badge-${t.status.toLowerCase()}">${t.status}</span></td>
+        <td style="font-size:0.78rem;color:var(--muted);">${new Date(t.createdAt).toLocaleDateString('en-IN')}</td>
+      </tr>`).join('');
+  }
+
+  function showAlert(id, msg, type) { const el=document.getElementById(id); el.textContent=msg; el.className=`alert alert-${type}`; el.style.display='block'; }
+  function hideAlert(id) { document.getElementById(id).style.display='none'; }
+</script>
+</body>
+</html>

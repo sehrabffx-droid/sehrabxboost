@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Sehrab X Boost</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Admin Login Overlay -->
+  <div id="admin-login-overlay" class="auth-wrapper" style="display: flex;">
+    <div class="auth-card glass">
+      <div class="auth-header">
+        <div class="logo-icon">🚀</div>
+        <h1 class="auth-title" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+          <span class="gradient-text">Sehrab X Boost Admin</span>
+          <span class="blue-tick" title="Verified" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; background: #1d9bf0; border-radius: 50%; box-shadow: 0 0 12px rgba(29,155,240,0.55);"><svg viewBox="0 0 24 24" style="width: 12px; height: 12px; fill: white;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+        </h1>
+        <p class="auth-subtitle">Secure access control to SMM backend</p>
+      </div>
+
+      <div id="login-alert" class="alert"></div>
+
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="admin-user">Admin Username</label>
+          <input type="text" id="admin-user" class="form-control" placeholder="Enter admin username" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="admin-pass">Admin Password</label>
+          <input type="password" id="admin-pass" class="form-control" placeholder="Enter admin password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+          <span>Access Dashboard</span>
+        </button>
+      </form>
+      <div class="auth-footer">
+        <p><a href="index.html" class="gradient-text">← Back to User Login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Main Dashboard (Hidden by default) -->
+  <div id="admin-dashboard" style="display: none; flex-direction: column; min-height: 100vh;">
+    
+    <!-- Navigation bar -->
+    <nav class="navbar glass">
+      <div class="nav-brand" style="display: flex; align-items: center; gap: 8px;">
+        <div class="nav-logo">🚀</div>
+        <span>Sehrab X Boost Admin</span>
+        <span class="blue-tick" title="Verified" style="width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; background: #1d9bf0; border-radius: 50%; box-shadow: 0 0 8px rgba(29,155,240,0.5);"><svg viewBox="0 0 24 24" style="width: 10px; height: 10px; fill: white;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+      </div>
+      <div class="nav-actions">
+        <span style="font-weight: 600; color: var(--text-muted); font-size: 0.9rem;">Secured Session</span>
+        <button class="btn btn-secondary btn-sm" onclick="handleAdminLogout()">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+      
+      <!-- Metrics row -->
+      <div class="stats-row">
+        <div class="stat-box glass">
+          <div class="stat-icon purple">👥</div>
+          <div class="stat-info">
+            <h4>Total Users</h4>
+            <p id="stat-total-users">0</p>
+          </div>
+        </div>
+        <div class="stat-box glass">
+          <div class="stat-icon green">₹</div>
+          <div class="stat-info">
+            <h4>User Balances</h4>
+            <p id="stat-total-balance">₹0.00</p>
+          </div>
+        </div>
+        <div class="stat-box glass">
+          <div class="stat-icon blue">🛒</div>
+          <div class="stat-info">
+            <h4>Total Orders</h4>
+            <p id="stat-total-orders">0</p>
+          </div>
+        </div>
+        <div class="stat-box glass">
+          <div class="stat-icon yellow">💸</div>
+          <div class="stat-info">
+            <h4>Total Revenue</h4>
+            <p id="stat-total-revenue">₹0.00</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Layout -->
+      <div class="grid-2 admin-layout-grid">
+        
+        <!-- Left Sidebar (Controls) -->
+        <div class="admin-sidebar">
+          <div class="admin-nav-item active" id="nav-payments" onclick="switchAdminTab('payments')">
+            <span>💳</span> Pending Payments <span id="badge-pending-count" class="badge badge-pending" style="font-size: 0.7rem; padding: 2px 6px; margin-left: auto; display: none;">0</span>
+          </div>
+          <div class="admin-nav-item" id="nav-users" onclick="switchAdminTab('users')">
+            <span>👥</span> User Profiles
+          </div>
+          <div class="admin-nav-item" id="nav-orders" onclick="switchAdminTab('orders')">
+            <span>🛒</span> SMM Orders
+          </div>
+          <div class="admin-nav-item" id="nav-services" onclick="switchAdminTab('services')">
+            <span>⚡</span> Manage Services
+          </div>
+        </div>
+
+        <!-- Right Content Panels -->
+        <div>
+          
+          <!-- Tab 1: Payments -->
+          <div id="panel-payments" class="panel-card glass tab-content active" style="margin-bottom:0;">
+            <div class="panel-title">Verify Pending Deposits (UTR Verification)</div>
+            <div id="payment-admin-alert" class="alert"></div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Txn ID</th>
+                    <th>User ID</th>
+                    <th>Mobile</th>
+                    <th>Amount</th>
+                    <th>UTR (12-Digit)</th>
+                    <th>Submit IP & Location</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-payments-body">
+                  <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-muted);">No pending deposit requests.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab 2: Users -->
+          <div id="panel-users" class="panel-card glass tab-content" style="margin-bottom:0;">
+            <div class="panel-title">Registered User Profiles</div>
+            <div id="user-admin-alert" class="alert"></div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Mobile</th>
+                    <th>Balance</th>
+                    <th>Total Spent</th>
+                    <th>Signup IP & Location</th>
+                    <th>Last Login IP & Location</th>
+                    <th>Registration Date</th>
+                    <th>Adjust Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-body">
+                  <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-muted);">No users registered yet.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab 3: SMM Orders -->
+          <div id="panel-orders" class="panel-card glass tab-content" style="margin-bottom:0;">
+            <div class="panel-title">SMM Order Details</div>
+            <div id="order-admin-alert" class="alert"></div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>User ID</th>
+                    <th>Service Name</th>
+                    <th>Target Link</th>
+                    <th>Quantity</th>
+                    <th>Cost</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-body">
+                  <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-muted);">No SMM orders found.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab 4: Manage Services -->
+          <div id="panel-services" class="panel-card glass tab-content" style="margin-bottom:0;">
+            <div class="panel-title">Add & Edit Services</div>
+            <div id="service-admin-alert" class="alert"></div>
+
+            <!-- Add Service Form -->
+            <form id="add-service-form" onsubmit="handleAddService(event)" style="margin-bottom: 30px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+              <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Create New Service</h3>
+              <div class="admin-form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="srv-category">Category</label>
+                  <select id="srv-category" class="form-control" required>
+                    <option value="Instagram">Instagram</option>
+                    <option value="YouTube">YouTube</option>
+                    <option value="Facebook">Facebook</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="srv-name">Service Name</label>
+                  <input type="text" id="srv-name" class="form-control" placeholder="Likes, Followers, etc." required>
+                </div>
+              </div>
+              <div class="admin-form-row-3">
+                <div class="form-group">
+                  <label class="form-label" for="srv-rate">Rate (₹ Per 1000)</label>
+                  <input type="number" id="srv-rate" class="form-control" placeholder="e.g. 50" required min="1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="srv-min">Min Qty</label>
+                  <input type="number" id="srv-min" class="form-control" placeholder="e.g. 100" required min="1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="srv-max">Max Qty</label>
+                  <input type="number" id="srv-max" class="form-control" placeholder="e.g. 10000" required min="1">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="srv-description">Description</label>
+                <input type="text" id="srv-description" class="form-control" placeholder="High quality, instant delivery notes...">
+              </div>
+              <button type="submit" class="btn btn-accent btn-sm">Add Service</button>
+            </form>
+
+            <!-- Services List Table -->
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Service ID</th>
+                    <th>Category</th>
+                    <th>Name</th>
+                    <th>Rate (Per 1000)</th>
+                    <th>Min / Max</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-services-body">
+                  <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-muted);">No services available.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 AetherForge Admin Control. Confidential Panel.</p>
+  </footer>
+
+  <script>
+    let adminToken = localStorage.getItem('smm_admin_token');
+
+    // Run auth display logic
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAdminSession();
+    });
+
+    function checkAdminSession() {
+      const loginOverlay = document.getElementById('admin-login-overlay');
+      const adminDash = document.getElementById('admin-dashboard');
+      
+      if (adminToken) {
+        loginOverlay.style.display = 'none';
+        adminDash.style.display = 'flex';
+        loadAdminStats();
+        loadAllData();
+      } else {
+        loginOverlay.style.display = 'flex';
+        adminDash.style.display = 'none';
+      }
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('admin-user').value;
+      const password = document.getElementById('admin-pass').value;
+      const alertDiv = document.getElementById('login-alert');
+      alertDiv.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+
+        localStorage.setItem('smm_admin_token', data.token);
+        adminToken = data.token;
+        checkAdminSession();
+      } catch (err) {
+        alertDiv.textContent = err.message;
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.style.display = 'block';
+      }
+    }
+
+    function handleAdminLogout() {
+      localStorage.removeItem('smm_admin_token');
+      adminToken = null;
+      checkAdminSession();
+    }
+
+    function switchAdminTab(tabName) {
+      // Hide all panels
+      const panels = ['payments', 'users', 'orders', 'services'];
+      panels.forEach(p => {
+        document.getElementById(`panel-${p}`).classList.remove('active');
+        document.getElementById(`nav-${p}`).classList.remove('active');
+      });
+
+      // Show selected panel
+      document.getElementById(`panel-${tabName}`).classList.add('active');
+      document.getElementById(`nav-${tabName}`).classList.add('active');
+    }
+
+    async function loadAdminStats() {
+      try {
+        const res = await fetch('/api/admin/stats', {
+          headers: { 'Authorization': `Bearer ${adminToken}` }
+        });
+        if (res.status === 401) return handleAdminLogout();
+        
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById('stat-total-users').textContent = data.totalUsers;
+          document.getElementById('stat-total-balance').textContent = `₹${data.totalBalance.toFixed(2)}`;
+          document.getElementById('stat-total-orders').textContent = data.totalOrders;
+          document.getElementById('stat-total-revenue').textContent = `₹${data.totalRevenue.toFixed(2)}`;
+          
+          const pendingBadge = document.getElementById('badge-pending-count');
+          if (data.pendingPayments > 0) {
+            pendingBadge.textContent = data.pendingPayments;
+            pendingBadge.style.display = 'inline-block';
+          } else {
+            pendingBadge.style.display = 'none';
+          }
+        }
+      } catch (err) {
+        console.error('Stats loading error:', err);
+      }
+    }
+
+    function loadAllData() {
+      loadAdminPayments();
+      loadAdminUsers();
+      loadAdminOrders();
+      loadAdminServices();
+    }
+
+    function getCategoryBadge(category) {
+      let svg = '';
+      let catClass = '';
+      if (category === 'Instagram') {
+        catClass = 'cat-instagram';
+        svg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 6px; display: inline-block; color: white;"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/></svg>`;
+      } else if (category === 'YouTube') {
+        catClass = 'cat-youtube';
+        svg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 6px; display: inline-block; color: white;"><path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.104 2.581l-.008.104-.022.26-.01.104c-.048.52-.119 1.023-.22 1.402a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.52.12-.1.224-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99 99 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/></svg>`;
+      } else if (category === 'Facebook') {
+        catClass = 'cat-facebook';
+        svg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 6px; display: inline-block; color: white;"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/></svg>`;
+      }
+      return `<span class="category-badge ${catClass}">${svg}${category}</span>`;
+    }
+
+    // --- Tab 1: Payments Processing ---
+    async function loadAdminPayments() {
+      try {
+        const res = await fetch('/api/admin/payments', {
+          headers: { 'Authorization': `Bearer ${adminToken}` }
+        });
+        const data = await res.json();
+        const tbody = document.getElementById('admin-payments-body');
+        
+        tbody.innerHTML = '';
+        if (data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">No deposits submitted yet.</td></tr>';
+          return;
+        }
+
+        data.forEach(t => {
+          const dateStr = new Date(t.createdAt).toLocaleString();
+          let actionCell = `<span class="badge badge-${t.status.toLowerCase()}">${t.status}</span>`;
+          
+          if (t.status === 'Pending') {
+            actionCell = `
+              <div class="admin-action-btns">
+                <button class="btn btn-primary btn-sm" onclick="approvePayment('${t.id}')">Approve</button>
+                <button class="btn btn-danger btn-sm" onclick="rejectPayment('${t.id}')">Reject</button>
+              </div>
+            `;
+          }
+
+          const row = `
+            <tr>
+              <td style="font-weight: bold; color: #a5b4fc;">${t.id}</td>
+              <td style="font-weight: bold;">${t.userId}</td>
+              <td>${t.mobile}</td>
+              <td style="font-weight: bold; color: #4ade80;">₹${t.amount.toFixed(2)}</td>
+              <td style="font-family: monospace; font-size: 0.95rem; color: #f8fafc;">${t.utr}</td>
+              <td>
+                <span style="font-weight: 600;">${t.ip}</span><br>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">${t.location || 'Local Host (India)'}</span>
+              </td>
+              <td style="font-size: 0.8rem; color: var(--text-muted);">${dateStr}</td>
+              <td>${actionCell}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      } catch (err) {
+        console.error('Payments loading error:', err);
+      }
+    }
+
+    async function approvePayment(id) {
+      const alertDiv = document.getElementById('payment-admin-alert');
+      alertDiv.style.display = 'none';
+      try {
+        const res = await fetch('/api/admin/payments/approve', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({ transactionId: id })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Approval failed');
+
+        alertDiv.textContent = data.message;
+        alertDiv.className = 'alert alert-success';
+        alertDiv.style.display = 'block';
+
+        loadAdminStats();
+        loadAllData();
+      } catch (err) {
+        alertDiv.textContent = err.message;
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.style.display = 'block';
+      }
+    }
+
+    async function rejectPayment(id) {
+      const alertDiv = document.getElementById('payment-admin-alert');
+      alertDiv.style.display = 'none';
+      try {
+        const res = await fetch('/api/admin/payments/reject', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({ transactionId: id })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Rejection failed');
+
+        alertDiv.textContent = data.message;
+        alertDiv.className = 'alert alert-success';
+        alertDiv.style.display = 'block';
+
+        loadAdminStats();
+        loadAllData();
+      } catch (err) {
+        alertDiv.textContent = err.message;
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.style.display = 'block';
+      }
+    }
+
+    // --- Tab 2: Users Management ---
+    async function loadAdminUsers() {
+      try {
+        const res = await fetch('/api/admin/users', {
+          headers: { 'Authorization': `Bearer ${adminToken}` }
+        });
+        const data = await res.json();
+        const tbody = document.getElementById('admin-users-body');
+        
+        tbody.innerHTML = '';
+        if (data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">No users found.</td></tr>';
+          return;
+        }
+
+        data.forEach(u => {
+          const dateStr = new Date(u.createdAt).toLocaleDateString();
+          const row = `
+            <tr>
+              <td style="font-weight: bold; color: #a5b4fc;">${u.id}</td>
+              <td style="font-weight: 600;">${u.mobile}</td>
+              <td style="font-weight: bold; color: #4ade80;">₹${u.balance.toFixed(2)}</td>
+              <td style="font-weight: bold; color: var(--text-muted);">₹${u.totalSpent.toFixed(2)}</td>
+              <td>
+                <span style="font-weight: 600;">${u.registrationIp}</span><br>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">${u.registrationLocation || 'Local Host'}</span>
+              </td>
+              <td>
+                <span style="font-weight: 600;">${u.lastLoginIp}</span><br>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">${u.lastLoginLocation || 'Local Host'}</span>
+              </td>
+              <td style="font-size: 0.8rem; color: var(--text-muted);">${dateStr}</td>
+              <td>
+                <form class="balance-adjust-form" onsubmit="adjustUserBalance(event, '${u.id}')">
+                  <input type="number" step="0.01" class="form-control" placeholder="Amt" required style="width: 80px;" id="adj-amount-${u.id}">
+                  <select class="form-control" style="width: 80px; padding: 6px;" id="adj-action-${u.id}">
+                    <option value="add">Add</option>
+                    <option value="deduct">Deduct</option>
+                  </select>
+                  <button type="submit" class="btn btn-primary btn-sm">Adjust</button>
+                </form>
+              </td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      } catch (err) {
+        console.error('Users loading error:', err);
+      }
+    }
+
+    async function adjustUserBalance(e, userId) {
+      e.preventDefault();
+      const amount = document.getElementById(`adj-amount-${userId}`).value;
+      const action = document.getElementById(`adj-action-${userId}`).value;
+      const alertDiv = document.getElementById('user-admin-alert');
+      alertDiv.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/users/adjust-balance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({ userId, amount, action })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to adjust balance');
+
+        alertDiv.textContent = data.message;
+        alertDiv.className = 'alert alert-success';
+        alertDiv.style.display = 'block';
+
+        loadAdminStats();
+        loadAllData();
+      } catch (err) {
+        alertDiv.textContent = err.message;
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.style.display = 'block';
+      }
+    }
+
+    // --- Tab 3: SMM Orders Management ---
+    async function loadAdminOrders() {
+      try {
+        const res = await fetch('/api/admin/orders', {
+          headers: { 'Authorization': `Bearer ${adminToken}` }
+        });
+        const data = await res.json();
+        const tbody = document.getElementById('admin-orders-body');
+        
+        tbody.innerHTML = '';
+        if (data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">No orders placed yet.</td></tr>';
+          return;
+        }
+
+        data.forEach(o => {
+          const dateStr = new Date(o.createdAt).toLocaleString();
+          const row = `
+            <tr>
+              <td style="font-weight: bold; color: #a5b4fc;">${o.id}</td>
+              <td style="font-weight: bold;">${o.userId}</td>
+              <td>
+                ${getCategoryBadge(o.category)}
+                <span style="display: block; font-size: 0.9rem; margin-top: 4px;">${o.serviceName}</span>
+              </td>
+              <td><a href="${o.link}" target="_blank" style="color: var(--primary); text-decoration: underline; font-size: 0.85rem;">View Link</a></td>
+              <td>${o.quantity}</td>
+              <td style="font-weight: bold;">₹${o.price.toFixed(2)}</td>
+              <td style="font-size: 0.8rem; color: var(--text-muted);">${dateStr}</td>
+              <td>
+                <select class="form-control" style="width: 130px; padding: 6px; font-weight: bold;" onchange="updateOrderStatus('${o.id}', this.value)">
+                  <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                  <option value="Completed" ${o.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                  <option value="Rejected" ${o.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                </select>
+              </td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      } catch (err) {
+        console.error('Orders loading error:', err);
+      }
+    }
+
+    async function updateOrderStatus(orderId, status) {
+      const alertDiv = document.getElementById('order-admin-alert');
+      alertDiv.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/orders/status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({ orderId, status })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to update order status');
+
+        alertDiv.textContent = data.message;
+        alertDiv.className = 'alert alert-success';
+        alertDiv.style.display = 'block';
+
+        loadAdminStats();
+        loadAllData();
+      } catch (err) {
+        alertDiv.textContent = err.message;
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.style.display = 'block';
+      }
+    }
+
+    // --- Tab 4: Services Management ---
+    async function loadAdminServices() {
+      try {
+        const res = await fetch('/api/services');
+        const data = await res.json();
+        const tbody = document.getElementById('admin-services-body');
+        
+        tbody.innerHTML = '';
+        if (data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No services configured.</td></tr>';
+          return;
+        }
+
+        data.forEach(s => {
+          const row = `
+            <tr>
+              <td style="font-weight: bold; color: #a5b4fc;">${s.id}</td>
+              <td>${getCategoryBadge(s.category)}</td>
+              <td style="font-weight: bold;">${s.name}</td>
+              <td style="font-weight: bold; color: #4ade80;">₹${s.rate}</td>
+              <td>Min: ${s.min} / Max: ${s.max}</td>
+              <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteService('${s.id}')">Delete</button>
+              </td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      } catch (err) {
+        console.error('Services loading error:', err);
+      }
+    }
+
+    async function handleAddService(e) {
+      e.preventDefault();
+      const category = document.getElementById('srv-category').value;
+      const name = document.getElementById('srv-name').value;
+      const rate = document.getElementById('srv-rate').value;
+      const min = document.getElementById('srv-min').value;
+      const max = document.getElementById('srv-max').value;
+      const description = document.getElementById('srv-description').value;
+      const alertDiv = document.getElementById('service-admin-alert');
+      alertDiv.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/services', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({ category, name, rate, min, max, description })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to add service');
+
+        alertDiv.textContent = data.message;
+        alertDiv.className = 'alert alert-success';
+        alertDiv.style.display = 'block';
+
+        document.getElementById('add-service-form').reset();
+        loadAllData();
+      } catch (err) {
+        alertDiv.textContent = err.message;
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.style.display = 'block';
+      }
+    }
+
+    async function deleteService(id) {
+      if (!confirm('Are you sure you want to delete this SMM service?')) return;
+      const alertDiv = document.getElementById('service-admin-alert');
+      alertDiv.style.display = 'none';
+
+      try {
+        const res = await fetch(`/api/admin/services/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${adminToken}` }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to delete service');
+
+        alertDiv.textContent = data.message;
+        alertDiv.className = 'alert alert-success';
+        alertDiv.style.display = 'block';
+
+        loadAllData();
+      } catch (err) {
+        alertDiv.textContent = err.message;
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sehrab X Boost - Premium SMM Panel</title>
+  <meta name="description" content="Buy Instagram Followers, YouTube Views, Facebook Likes at the cheapest rates. India's #1 SMM Panel.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* BLUE TICK */
+    .blue-tick {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px; height: 22px;
+      background: #1d9bf0;
+      border-radius: 50%;
+      margin-left: 7px;
+      flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(29,155,240,0.55);
+    }
+    .blue-tick svg { width: 12px; height: 12px; fill: white; }
+    :root {
+      --bg: #060a15;
+      --primary: #6366f1;
+      --secondary: #d946ef;
+      --card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --font: 'Outfit', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    /* Animated background blobs */
+    .bg-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: floatBlob 10s ease-in-out infinite;
+    }
+    .bg-blob-1 { width: 500px; height: 500px; background: rgba(99,102,241,0.12); top: -100px; left: -100px; }
+    .bg-blob-2 { width: 400px; height: 400px; background: rgba(217,70,239,0.08); bottom: -80px; right: -80px; animation-delay: -5s; }
+    .bg-blob-3 { width: 300px; height: 300px; background: rgba(20,184,166,0.06); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -2.5s; }
+    @keyframes floatBlob { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(30px, 20px); } }
+    .bg-blob-3 { animation-name: floatBlob3; }
+    @keyframes floatBlob3 { 0%, 100% { transform: translate(-50%,-50%); } 50% { transform: translate(calc(-50% + 20px), calc(-50% - 20px)); } }
+
+    /* Grid lines */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* LAYOUT */
+    .page-wrap {
+      flex: 1;
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* LEFT PANEL */
+    .left-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 80px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.25);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      margin-bottom: 28px;
+    }
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .grad { background: linear-gradient(135deg, #a5b4fc, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 40px;
+    }
+
+    /* Platform showcase */
+    .platforms-row { display: flex; gap: 14px; margin-bottom: 40px; }
+    .plat-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: white;
+    }
+    .plat-pill.ig { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .plat-pill.yt { background: #ff0000; }
+    .plat-pill.fb { background: #1877f2; }
+    .plat-pill svg { width: 18px; height: 18px; fill: white; }
+
+    /* Stats row */
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+    }
+    .hero-stat h3 { font-size: 1.6rem; font-weight: 900; color: #a5b4fc; }
+    .hero-stat p { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+
+    /* RIGHT PANEL - AUTH CARD */
+    .right-panel {
+      width: 460px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 30px;
+      border-left: 1px solid var(--border);
+      background: rgba(255,255,255,0.015);
+    }
+    .auth-card { width: 100%; max-width: 380px; }
+    .auth-logo {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(99,102,241,0.35);
+    }
+    .auth-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+    .auth-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; }
+
+    /* Tabs */
+    .auth-tabs {
+      display: flex;
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--muted);
+      transition: all 0.3s;
+    }
+    .auth-tab.active {
+      background: rgba(99,102,241,0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+
+    /* Alert */
+    .alert { padding: 12px 14px; border-radius: 9px; margin-bottom: 16px; font-size: 0.88rem; display: none; }
+    .alert-success { display: block; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; }
+    .alert-danger  { display: block; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: #f87171; }
+
+    /* Form */
+    .form-label { display: block; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 7px; }
+    .form-input {
+      width: 100%;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 9px;
+      padding: 13px 16px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      transition: all 0.3s;
+    }
+    .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+    .form-input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
+      color: white;
+      box-shadow: 0 5px 20px rgba(99,102,241,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.45); }
+    .btn-accent {
+      background: linear-gradient(135deg, var(--secondary), #c084fc);
+      color: white;
+      box-shadow: 0 5px 20px rgba(217,70,239,0.3);
+    }
+    .btn-accent:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(217,70,239,0.4); }
+
+    .admin-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .admin-link a {
+      color: #a5b4fc;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .admin-link a:hover { text-decoration: underline; }
+
+    /* Mobile responsive */
+    @media (max-width: 900px) {
+      .left-panel { display: none; }
+      .right-panel { width: 100%; border: none; background: transparent; }
+      .page-wrap { justify-content: center; }
+    }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .fadeUp { animation: fadeUp 0.5s ease-out; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
+  <div class="bg-blob bg-blob-3"></div>
+
+  <div class="page-wrap">
+
+    <!-- LEFT: Hero Content -->
+    <div class="left-panel">
+      <div class="hero-badge">🚀 India's Premium SMM Panel</div>
+      <h1 class="hero-title">
+        Grow Faster with<br>
+        <span style="display:inline-flex;align-items:center;gap:8px;">
+          <span class="grad">Sehrab X Boost</span>
+          <span class="blue-tick" title="Verified"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+        </span>
+      </h1>
+      <p class="hero-desc">
+        The most affordable & reliable Social Media Marketing panel. Get real Instagram followers, YouTube views, Facebook likes and more — delivered instantly.
+      </p>
+
+      <div class="platforms-row">
+        <div class="plat-pill ig">
+          <svg viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/></svg>
+          Instagram
+        </div>
+        <div class="plat-pill yt">
+          <svg viewBox="0 0 16 16"><path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.104 2.581l-.008.104-.022.26-.01.104c-.048.52-.119 1.023-.22 1.402a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.52.12-.1.224-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99 99 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/></svg>
+          YouTube
+        </div>
+        <div class="plat-pill fb">
+          <svg viewBox="0 0 16 16"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/></svg>
+          Facebook
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat"><h3>12+</h3><p>SMM Services</p></div>
+        <div class="hero-stat"><h3>₹15</h3><p>Starting from</p></div>
+        <div class="hero-stat"><h3>24/7</h3><p>Support</p></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Auth Card -->
+    <div class="right-panel">
+      <div class="auth-card fadeUp">
+        <div class="auth-logo">🚀</div>
+        <h2 class="auth-title" style="display:flex;align-items:center;gap:6px;">Welcome Back
+          <div class="blue-tick" title="Verified"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+        </h2>
+        <p class="auth-sub">Login or create a new account to start ordering</p>
+
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Login</div>
+          <div class="auth-tab" id="tab-reg" onclick="switchTab('register')">Register</div>
+        </div>
+
+        <div id="alert-msg" class="alert"></div>
+
+        <!-- Login Form -->
+        <form id="login-form" onsubmit="doLogin(event)">
+          <label class="form-label">Mobile Number</label>
+          <input type="tel" id="l-mobile" class="form-input" placeholder="Enter your 10-digit mobile no." required>
+          <label class="form-label">Password</label>
+          <input type="password" id="l-pass" class="form-input" placeholder="Enter password" required>
+          <button type="submit" class="btn btn-primary">🔐 Login to sehrabboost</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="reg-form" onsubmit="doRegister(event)" style="display:none;">
+          <label class="form-label">Mobile Number</label>
+          <input type="tel" id="r-mobile" class="form-input" placeholder="Enter your mobile number" required>
+          <label class="form-label">Create Password</label>
+          <input type="password" id="r-pass" class="form-input" placeholder="Min 6 characters" required minlength="6">
+          <button type="submit" class="btn btn-accent">🚀 Create Account</button>
+        </form>
+
+        <div class="admin-link">
+          <a href="admin.html">Go to Admin Panel →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // Already logged in?
+  if (localStorage.getItem('smm_user_token')) window.location.href = 'dashboard.html';
+
+  function switchTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('tab-login').classList.toggle('active', isLogin);
+    document.getElementById('tab-reg').classList.toggle('active', !isLogin);
+    document.getElementById('login-form').style.display = isLogin ? 'block' : 'none';
+    document.getElementById('reg-form').style.display = isLogin ? 'none' : 'block';
+    document.getElementById('alert-msg').style.display = 'none';
+  }
+
+  function showAlert(msg, type) {
+    const el = document.getElementById('alert-msg');
+    el.textContent = msg;
+    el.className = `alert alert-${type}`;
+    el.style.display = 'block';
+  }
+
+  async function doLogin(e) {
+    e.preventDefault();
+    const mobile = document.getElementById('l-mobile').value.trim();
+    const password = document.getElementById('l-pass').value;
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      showAlert('✅ Login successful! Redirecting...', 'success');
+      localStorage.setItem('smm_user_token', data.token);
+      setTimeout(() => window.location.href = 'dashboard.html', 1000);
+    } catch (err) {
+      showAlert('❌ ' + err.message, 'danger');
+    }
+  }
+
+  async function doRegister(e) {
+    e.preventDefault();
+    const mobile = document.getElementById('r-mobile').value.trim();
+    const password = document.getElementById('r-pass').value;
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      showAlert('🎉 Account created! Redirecting...', 'success');
+      localStorage.setItem('smm_user_token', data.token);
+      setTimeout(() => window.location.href = 'dashboard.html', 1000);
+    } catch (err) {
+      showAlert('❌ ' + err.message, 'danger');
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+node_modules/
+db.json
+.system_generated/
+*.log
+.env
