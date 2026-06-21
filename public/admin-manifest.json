@@ -1,0 +1,17 @@
+{
+  "name": "Sehrab X Admin",
+  "short_name": "SehrabAdmin",
+  "description": "Admin Control Panel for Sehrab X Boost.",
+  "start_url": "/admin.html",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#0f0f0f",
+  "icons": [
+    {
+      "src": "/img/admin-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
